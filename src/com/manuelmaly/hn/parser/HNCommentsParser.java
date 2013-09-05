@@ -22,9 +22,14 @@ public class HNCommentsParser extends BaseHTMLParser<HNPostComments> {
         ArrayList<HNComment> comments = new ArrayList<HNComment>();
 
         Elements tableRows = doc.select("table tr table tr:has(table)");
+        int tableRowsCount = doc.select("body table > tbody > tr").size();
+
+        if (tableRowsCount == 6) {
+            
+        }
 
         String currentUser = Settings.getUserName(App.getInstance());
-        
+
         String text = null;
         String author = null;
         int level = 0;
@@ -39,7 +44,7 @@ public class HNCommentsParser extends BaseHTMLParser<HNPostComments> {
             Element rowLevelElement = tableRows.get(row).select("td:eq(0)").first();
             if (mainRowElement == null)
                 break;
-            
+
             text = mainRowElement.select("span.comment > *:not(*:contains(reply))").html();
 
             Element comHeadElement = mainRowElement.select("span.comhead").first();
@@ -54,7 +59,7 @@ public class HNCommentsParser extends BaseHTMLParser<HNPostComments> {
             String levelSpacerWidth = rowLevelElement.select("img").first().attr("width");
             if (levelSpacerWidth != null)
                 level = Integer.parseInt(levelSpacerWidth) / 40;
-            
+
             Element upVoteElement = tableRows.get(row).select("td:eq(1) a").first();
             if (upVoteElement != null) {
                 upvoteUrl = upVoteElement.attr("href").contains(currentUser) ? 
